@@ -1,118 +1,123 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import './gesture-handler';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import HomeScreen from './screen/HomeScreen';
+import ScheduleScreen from './screen/ScheduleScreen';
+import BookmarkScreen from './screen/BookmarkScreen';
+import UserScreen from './screen/UserScreen';
+import {HouseIcon1} from './assets/svg';
+import {StyleSheet, Text, View} from 'react-native';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+const Tab = createBottomTabNavigator();
+
+const CustomTabBarItem = ({label, icon: Icon, isFocused}) => (
+  <View style={styles.tabItem}>
+    <View style={styles.iconContainer}>
+      <Icon color={isFocused ? '#4a4af4' : 'gray'} width={24} height={24} />
     </View>
-  );
-}
+    <Text style={[styles.tabLabel, {color: isFocused ? '#4a4af4' : 'gray'}]}>
+      {label}
+    </Text>
+  </View>
+);
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            elevation: 0,
+            backgroundColor: '#fff',
+            borderTopColor: 'transparent',
+            height: 60,
+          },
+          tabBarItemStyle: {
+            padding: 5,
+          },
+        }}>
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) => (
+              <CustomTabBarItem
+                label="Home"
+                icon={HouseIcon1}
+                isFocused={focused}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Schedule"
+          component={ScheduleScreen}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) => (
+              <CustomTabBarItem
+                label="Calendar"
+                icon={HouseIcon1}
+                isFocused={focused}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Bookmark"
+          component={BookmarkScreen}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) => (
+              <CustomTabBarItem
+                label="Saved"
+                icon={HouseIcon1}
+                isFocused={focused}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="User"
+          component={UserScreen}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) => (
+              <CustomTabBarItem
+                label="Profile"
+                icon={HouseIcon1}
+                isFocused={focused}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
+export default App;
+
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  tabItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#f5f4f3', // Add background color
+    padding: 4, // Optional padding for better touch area
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  iconContainer: {
+    marginRight: 4, // Gap of 4 between icon and label
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  tabLabel: {
+    fontSize: 12, // Font size of 12px
   },
 });
-
-export default App;
