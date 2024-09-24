@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import Header from '../components/Header';
 import Category from '../components/Category';
 import NearLocation from '../components/NearLocation';
@@ -9,12 +9,12 @@ import {COLORS} from '../constants';
 const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Header />
         <Category />
         <NearLocation />
         <PopularHotel />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -28,5 +28,6 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
+    paddingBottom: 80,
   },
 });

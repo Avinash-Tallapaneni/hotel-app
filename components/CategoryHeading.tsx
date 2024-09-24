@@ -5,10 +5,9 @@ import {COLORS, FONT_SIZES, SPACING} from '../constants';
 interface CategoryHeadingProps {
   title: string;
   cta: string;
-  category?: string;
 }
 
-const CategoryHeading = ({title, cta, category}: CategoryHeadingProps) => {
+const CategoryHeading = ({title, cta}: CategoryHeadingProps) => {
   return (
     <View style={styles.header}>
       <Text style={styles.title}>{title}</Text>
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FONT_SIZES.body,
-    fontWeight: '500',
+    fontWeight: '700',
     color: COLORS.onyx,
   },
   seeAll: {

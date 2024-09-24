@@ -10,15 +10,18 @@ import HeartIcon from '../assets/svg/HeartIcon';
 import {COLORS, SPACING} from '../constants';
 import {BORDERS} from '../constants/border';
 import LocationRating from './LocationRating';
+import {useNavigation} from '@react-navigation/native';
 
 export interface HotelCardProps {
   isSmall?: boolean;
+  isSchedule?: boolean;
   imageSource: ImageSourcePropType;
   name: string;
   location: string;
   rating: number;
   price: number;
   currency: string;
+  date?: string;
 }
 
 const HotelCard: React.FC<HotelCardProps> = ({
@@ -29,30 +32,62 @@ const HotelCard: React.FC<HotelCardProps> = ({
   price,
   currency,
   isSmall = false,
+  isSchedule = false,
+  date,
 }) => {
+  const navigation = useNavigation(); // Initialize navigation
+
+  const handlePress = () => {
+    navigation.navigate('HotelPreview', {
+      name: name,
+      location: location,
+      rating: rating,
+      price: price,
+      currency: currency,
+      date: date,
+      imageSource: imageSource,
+      description:
+        'Aston Hotel, Alice Springs NT 0870, Australia is a modern hotel. elegant 5 star hotel overlooking the sea. perfect for a romantic, charming ',
+      previewImages: [
+        require('../assets/property/property1.png'),
+        require('../assets/property/property2.png'),
+        require('../assets/property/property3.png'),
+        require('../assets/property/property4.png'),
+        require('../assets/property/property5.png'),
+        require('../assets/property/property6.png'),
+      ],
+    });
+  };
   return (
-    <View style={[styles.card, isSmall && styles.smallCard]}>
-      <View
-        style={[styles.imageContainer, isSmall && styles.smallImageContainer]}>
-        <Image
-          source={imageSource}
-          style={[styles.image, isSmall && styles.smallImage]}
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.9}>
+      <View style={[styles.card, isSmall && styles.smallCard]}>
+        <View
+          style={[
+            styles.imageContainer,
+            isSmall && styles.smallImageContainer,
+          ]}>
+          <Image
+            source={imageSource}
+            style={[styles.image, isSmall && styles.smallImage]}
+          />
+          {!isSmall && (
+            <TouchableOpacity style={styles.heartButton}>
+              <HeartIcon width={20} height={20} />
+            </TouchableOpacity>
+          )}
+        </View>
+        <LocationRating
+          name={name}
+          location={location}
+          rating={rating}
+          price={price}
+          currency={currency}
+          isSmall={isSmall}
+          isSchedule={isSchedule}
+          date={date}
         />
-        {!isSmall && (
-          <TouchableOpacity style={styles.heartButton}>
-            <HeartIcon width={20} height={20} />
-          </TouchableOpacity>
-        )}
       </View>
-      <LocationRating
-        name={name}
-        location={location}
-        rating={rating}
-        price={price}
-        currency={currency}
-        isSmall={isSmall}
-      />
-    </View>
+    </TouchableOpacity>
   );
 };
 export default HotelCard;

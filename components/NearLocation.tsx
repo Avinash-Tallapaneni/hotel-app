@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
   },
 
   scrollView: {
-    // overflow: 'visible',
     marginHorizontal: -SPACING.md,
   },
 });

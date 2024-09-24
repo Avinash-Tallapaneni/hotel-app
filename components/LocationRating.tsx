@@ -3,6 +3,8 @@ import React from 'react';
 import StarIcon from '../assets/svg/StarIcon';
 import {HotelCardProps} from './HotelCard';
 import {COLORS, FONT_SIZES, FONTS_FAMILIES, SPACING} from '../constants';
+import {CalendarIcon} from '../assets/svg';
+import RIghtArrowIcon from '../assets/svg/RIghtArrowIcon';
 
 interface LocationRatingProps extends Omit<HotelCardProps, 'imageSource'> {}
 
@@ -13,27 +15,44 @@ const LocationRating = ({
   price,
   currency,
   isSmall,
+  isSchedule,
+  date,
 }: LocationRatingProps) => {
   return (
-    <View style={[styles.contentContainer, isSmall && styles.smallCard]}>
-      <View style={styles.nameLocationContainer}>
-        <View style={styles.nameRatingContainer}>
-          <Text style={styles.name} numberOfLines={1}>
-            {name}
-          </Text>
-          <View style={styles.ratingContainer}>
-            <StarIcon width={20} height={20} />
-            <Text style={styles.rating}>{rating.toFixed(1)}</Text>
+    <View style={styles.container}>
+      <View style={[styles.contentContainer, isSmall && styles.smallCard]}>
+        <View style={styles.nameLocationContainer}>
+          <View style={styles.nameRatingContainer}>
+            <Text style={styles.name} numberOfLines={1}>
+              {name}
+            </Text>
+            {!isSchedule && (
+              <View style={styles.ratingContainer}>
+                <StarIcon width={20} height={20} />
+                <Text style={styles.rating}>{rating.toFixed(1)}</Text>
+              </View>
+            )}
           </View>
+          {!isSchedule && (
+            <Text style={styles.location} numberOfLines={1}>
+              {location}
+            </Text>
+          )}
+          {isSchedule && (
+            <View style={styles.scheduleContainer}>
+              <CalendarIcon stroke={COLORS.grey} />
+              <Text style={styles.scheduleDate}>{date}</Text>
+            </View>
+          )}
         </View>
-        <Text style={styles.location} numberOfLines={1}>
-          {location}
+        <Text style={styles.price}>
+          {currency}
+          {price.toFixed(1)} <Text style={styles.perNight}>/night</Text>
         </Text>
       </View>
-      <Text style={styles.price}>
-        {currency}
-        {price.toFixed(1)} <Text style={styles.perNight}>/night</Text>
-      </Text>
+      {isSchedule && (
+        <RIghtArrowIcon stroke={COLORS.onyx} width={24} height={24} />
+      )}
     </View>
   );
 };
@@ -41,9 +60,16 @@ const LocationRating = ({
 export default LocationRating;
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+  },
   contentContainer: {
     padding: SPACING.sml,
     gap: SPACING.md,
+    flex: 1,
   },
   nameLocationContainer: {
     gap: SPACING.xs,
@@ -88,5 +114,15 @@ const styles = StyleSheet.create({
 
   smallCard: {
     padding: 0,
+  },
+  scheduleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+
+  scheduleDate: {
+    color: COLORS.grey,
+    marginLeft: 4,
   },
 });

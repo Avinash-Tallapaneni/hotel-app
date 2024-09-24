@@ -1,123 +1,161 @@
 import React from 'react';
-import './gesture-handler';
-
+import {StyleSheet, Text, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from './screen/HomeScreen';
 import ScheduleScreen from './screen/ScheduleScreen';
 import BookmarkScreen from './screen/BookmarkScreen';
 import UserScreen from './screen/UserScreen';
-import {HouseIcon1} from './assets/svg';
-import {StyleSheet, Text, View} from 'react-native';
+import HotelPreviewScreen from './screen/HotelPreviewScreen';
+
+import {CalendarIcon, BookmarkIcon, UserIcon} from './assets/svg';
+import {COLORS, FONT_SIZES} from './constants';
+import FilledHouseIcon from './assets/svg/FilledHouseIcon';
+import FilledCalendarIcon from './assets/svg/FilledCalendarIcon';
+import HouseTabIcon from './assets/svg/HouseTabIcon';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-const CustomTabBarItem = ({label, icon: Icon, isFocused}) => (
-  <View style={styles.tabItem}>
-    <View style={styles.iconContainer}>
-      <Icon color={isFocused ? '#4a4af4' : 'gray'} width={24} height={24} />
+type CustomTabBarItemProps = {
+  label: string;
+  focusedIcon: React.ElementType;
+  defaultIcon: React.ElementType;
+  isFocused: boolean;
+};
+
+const CustomTabBarItem = ({
+  label,
+  focusedIcon: FocusedIcon,
+  defaultIcon: DefaultIcon,
+  isFocused,
+}: CustomTabBarItemProps) => {
+  const Icon = isFocused ? FocusedIcon : DefaultIcon;
+
+  return (
+    <View style={[styles.tabItem, isFocused && styles.activeTab]}>
+      <View style={styles.iconContainer}>
+        <Icon
+          stroke={isFocused ? COLORS.royalBlue : COLORS.grey}
+          width={24}
+          height={24}
+        />
+      </View>
+      {isFocused && <Text style={styles.activeLabel}>{label}</Text>}
     </View>
-    <Text style={[styles.tabLabel, {color: isFocused ? '#4a4af4' : 'gray'}]}>
-      {label}
-    </Text>
-  </View>
-);
+  );
+};
+
+const tabScreens = [
+  {
+    name: 'Home',
+    component: HomeScreen,
+    label: 'Home',
+    focusedIcon: FilledHouseIcon,
+    defaultIcon: HouseTabIcon,
+  },
+  {
+    name: 'Schedule',
+    component: ScheduleScreen,
+    label: 'Schedule',
+    focusedIcon: FilledCalendarIcon,
+    defaultIcon: CalendarIcon,
+  },
+  {
+    name: 'Bookmark',
+    component: BookmarkScreen,
+    label: 'Saved',
+    focusedIcon: BookmarkIcon,
+    defaultIcon: BookmarkIcon,
+  },
+  {
+    name: 'User',
+    component: UserScreen,
+    label: 'Profile',
+    focusedIcon: UserIcon,
+    defaultIcon: UserIcon,
+  },
+];
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: styles.tabBar,
+        headerShown: false,
+      }}>
+      {tabScreens.map(({name, component, label, focusedIcon, defaultIcon}) => (
+        <Tab.Screen
+          key={name}
+          name={name}
+          component={component}
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) => (
+              <CustomTabBarItem
+                label={label}
+                focusedIcon={focusedIcon}
+                defaultIcon={defaultIcon}
+                isFocused={focused}
+              />
+            ),
+          }}
+        />
+      ))}
+    </Tab.Navigator>
+  );
+};
 
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: {
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            elevation: 0,
-            backgroundColor: '#fff',
-            borderTopColor: 'transparent',
-            height: 60,
-          },
-          tabBarItemStyle: {
-            padding: 5,
-          },
-        }}>
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            tabBarLabel: () => null,
-            tabBarIcon: ({focused}) => (
-              <CustomTabBarItem
-                label="Home"
-                icon={HouseIcon1}
-                isFocused={focused}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Schedule"
-          component={ScheduleScreen}
-          options={{
-            tabBarLabel: () => null,
-            tabBarIcon: ({focused}) => (
-              <CustomTabBarItem
-                label="Calendar"
-                icon={HouseIcon1}
-                isFocused={focused}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Bookmark"
-          component={BookmarkScreen}
-          options={{
-            tabBarLabel: () => null,
-            tabBarIcon: ({focused}) => (
-              <CustomTabBarItem
-                label="Saved"
-                icon={HouseIcon1}
-                isFocused={focused}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="User"
-          component={UserScreen}
-          options={{
-            tabBarLabel: () => null,
-            tabBarIcon: ({focused}) => (
-              <CustomTabBarItem
-                label="Profile"
-                icon={HouseIcon1}
-                isFocused={focused}
-              />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="HomeTabs" component={TabNavigator} />
+        <Stack.Screen name="HotelPreview" component={HotelPreviewScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default App;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
+  tabBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 56,
+    borderTopColor: 'transparent',
+    justifyContent: 'center',
+    elevation: 0,
+    flexDirection: 'row',
+    gap: 50,
+    paddingHorizontal: 20,
+  },
   tabItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    backgroundColor: '#f5f4f3', // Add background color
-    padding: 4, // Optional padding for better touch area
   },
   iconContainer: {
-    marginRight: 4, // Gap of 4 between icon and label
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  tabLabel: {
-    fontSize: 12, // Font size of 12px
+  activeLabel: {
+    color: COLORS.royalBlue,
+    fontWeight: '600',
+    fontSize: FONT_SIZES.tiny,
+  },
+  activeTab: {
+    display: 'flex',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 20,
+    opacity: 0.85,
+    backgroundColor: COLORS.periwinkle,
   },
 });
