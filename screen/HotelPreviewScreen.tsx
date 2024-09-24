@@ -16,6 +16,9 @@ import RIghtArrowIcon from '../assets/svg/RIghtArrowIcon';
 import MenuIcon from '../assets/svg/MenuIcon';
 import LocationIcon from '../assets/svg/LocationIcon';
 import {HouseIcon2} from '../assets/svg';
+import WifiIcon from '../assets/svg/WifiIcon';
+import CoffeeMugIcon from '../assets/svg/CoffeeMugIcon';
+import StarIcon from '../assets/svg/StarIcon';
 
 const HotelPreviewScreen = ({route}) => {
   const {
@@ -49,16 +52,16 @@ const HotelPreviewScreen = ({route}) => {
 
         <View style={styles.amenitiesContainer}>
           <View style={styles.amenity}>
-            <HouseIcon2 />
+            <WifiIcon />
             <Text style={styles.amenityText}>Free Wifi</Text>
           </View>
           <View style={styles.amenity}>
-            <HouseIcon2 />
+            <CoffeeMugIcon />
             <Text style={styles.amenityText}>Free Breakfast</Text>
           </View>
           <View style={styles.amenity}>
-            <HouseIcon2 />
-            <Text style={styles.ratingText}>{rating}</Text>
+            <StarIcon />
+            <Text style={styles.ratingText}>{rating.toFixed(1)}</Text>
           </View>
         </View>
 
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: SPACING.md,
-    gap: SPACING.sm,
+    // gap: SPACING.sm,
     alignItems: 'center',
   },
   amenity: {
